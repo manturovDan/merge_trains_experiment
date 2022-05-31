@@ -17,19 +17,11 @@ public class BranchFeeder {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         for (int i = 1; i < 100; ++i) {
-            createFakePrFromExistentBranches(i);
+            createFakePR();
             TimeUnit.SECONDS.sleep(secInterval);
         }
     }
 
-    public static void createFakePrFromExistentBranches(int newBranchNumber) throws IOException, InterruptedException {
-        String monorepoPath = "/Users/Danila.Manturov/source/git-sandbox/monorepo";
-        execute("pwd");
-        execute("git", "-C", monorepoPath, "checkout", "main");
-        execute("git", "-C", monorepoPath, "checkout", "branch_"+newBranchNumber);
-        execute("git", "-C", monorepoPath, "push", "origin", "branch_"+newBranchNumber);
-        execute("sh", "src/createPR.sh", String.valueOf(newBranchNumber));
-    }
 
     public static void createFakePR() throws IOException, InterruptedException {
         String monorepoPath = "/Users/Danila.Manturov/source/git-sandbox/monorepo";
