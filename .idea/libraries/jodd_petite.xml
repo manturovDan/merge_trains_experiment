@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="jodd.petite" type="repository">
+    <properties maven-id="org.jodd:jodd-petite:3.6.5" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jodd/jodd-petite/3.6.5/jodd-petite-3.6.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/jodd/jodd-core/3.6.5/jodd-core-3.6.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/jodd/jodd-props/3.6.5/jodd-props-3.6.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/jodd/jodd-bean/3.6.5/jodd-bean-3.6.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/jodd/jodd-log/3.6.5/jodd-log-3.6.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
