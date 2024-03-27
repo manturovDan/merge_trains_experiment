@@ -13,28 +13,42 @@ public class BranchFeeder {
     static PrintStream outputStream = System.out;
     static final Pattern branchPattern =Pattern.compile("branch_(\\d+)");
     static final double threshold = 0.8;
-    static final int secInterval = 40;
+    static final int secInterval = 15;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        for (int i = 1; i < 100; ++i) {
-            createFakePR();
+        if (args.length < 1) {
+            throw new RuntimeException("No repo specified!");
+        }
+
+        int newRepoBrNum = -1;
+        if (args.length > 1) {
+            newRepoBrNum = Integer.parseInt(args[1]);
+        }
+
+        System.out.println(args[0]);
+        for (int i = 0; i < 100; ++i) {
+            createFakePR(args[0], newRepoBrNum + i);
             TimeUnit.SECONDS.sleep(secInterval);
         }
     }
 
 
-    public static void createFakePR() throws IOException, InterruptedException {
-        String monorepoPath = "/Users/Danila.Manturov/source/git-sandbox/monorepo";
+    public static void createFakePR(String repoPath, int newCounter) throws IOException, InterruptedException {
         execute("pwd");
-        execute("git", "-C", monorepoPath, "checkout", "main");
-        String branches = execute("git", "-C", monorepoPath, "branch");
-        int newBranchNumber = getMaxBranchNumber(branches)+1; //find max N in among branch_N branches (else 0)
-        execute("git", "-C", monorepoPath, "checkout", "-b", "branch_"+newBranchNumber);
-        createFile(monorepoPath + "/branch_"+newBranchNumber+".txt", (Math.random() < threshold ? "1" : "0"));
-        execute("git", "-C", monorepoPath, "add", ".");
-        execute("git", "-C", monorepoPath, "commit", "-m", "created : " + newBranchNumber);
-        execute("git", "-C", monorepoPath, "push", "origin", "branch_"+newBranchNumber);
-        execute("sh", "src/createPR.sh", String.valueOf(newBranchNumber));
+        execute("git", "-C", repoPath, "checkout", "main");
+        String branches = execute("git", "-C", repoPath, "branch");
+        int newBranchNumber = newCounter;
+        if (newBranchNumber == -1) {
+            newBranchNumber = getMaxBranchNumber(branches) + 1; //find max N in among branch_N branches (else 0)
+        }
+        execute("git", "-C", repoPath, "checkout", "-b", "branch_"+newBranchNumber);
+        String result = (Math.random() < threshold ? "1" : "0");
+        createFile(repoPath + "/branch_"+newBranchNumber+".txt", result);
+        execute("git", "-C", repoPath, "add", ".");
+        execute("git", "-C", repoPath, "commit", "-m", "created : " + newBranchNumber);
+        execute("git", "-C", repoPath, "push", "origin", "branch_"+newBranchNumber);
+        execute("sh", "src/createMR_gitlab.sh", String.valueOf(newBranchNumber));
+        System.err.println("Created: PR-" + newBranchNumber + ": " + result);
     }
 
     static String execute(String... command) throws InterruptedException, IOException {
